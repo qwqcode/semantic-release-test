@@ -8,6 +8,9 @@ install:
 
 # @see https://github.com/goreleaser/goreleaser/issues/910
 release:
+	@if ! command -v git-chglog &> /dev/null; then \
+		go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest; \
+	fi
 	@if [ ! -f ".release-env" ]; then \
 		echo "\033[91m.release-env is required for release\033[0m";\
 		exit 1;\
@@ -29,6 +32,9 @@ release-changelog:
 	@git-chglog ${VERSION}
 
 changelog:
+	@if ! command -v git-chglog &> /dev/null; then \
+		go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest; \
+	fi
 	git-chglog -o CHANGELOG.md
 
 .PHONY: install release release-changelog changelog;
