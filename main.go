@@ -15,6 +15,7 @@ func main() {
 	// make some changes
 
 	fmt.Println(config.Version)
+	fmt.Println(config.CommitHash)
 
 	fmt.Println(Hello + " " + World)
 }
