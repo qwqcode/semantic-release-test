@@ -1,8 +1,10 @@
 PACKAGE_NAME := github.com/qwqcode/test
-BIN_NAME	 := ./bin/hello
 VERSION      ?= $(shell git describe --tags --abbrev=0)
 COMMIT_HASH  := $(shell git rev-parse --short HEAD)
 GO_VERSION   ?= 1.19.4
+
+install:
+	go mod tidy
 
 # @see https://github.com/goreleaser/goreleaser/issues/910
 release:
@@ -20,6 +22,13 @@ release:
 		-v `pwd`/sysroot:/sysroot \
 		-w /go/src/$(PACKAGE_NAME) \
 		ghcr.io/goreleaser/goreleaser-cross:v${GO_VERSION} \
-		release --rm-dist --skip-validate
+		release --rm-dist --skip-validate \
+		--release-notes <(make release-changelog)
 
-.PHONY: release;
+release-changelog:
+	@git-chglog ${VERSION}
+
+changelog:
+	git-chglog -o CHANGELOG.md
+
+.PHONY: install release release-changelog changelog;
