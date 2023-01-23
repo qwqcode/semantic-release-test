@@ -11,7 +11,7 @@ release:
 	@if ! command -v git-chglog &> /dev/null; then \
 		go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest; \
 	fi
-	git-chglog ${VERSION} > /tmp/release-notes.md
+	git-chglog ${VERSION} > release-notes.md
 	@if [ ! -f ".release-env" ]; then \
 		echo "\033[91m.release-env is required for release\033[0m";\
 		exit 1;\
@@ -27,7 +27,7 @@ release:
 		-w /go/src/$(PACKAGE_NAME) \
 		ghcr.io/goreleaser/goreleaser-cross:v${GO_VERSION} \
 		release --rm-dist --skip-validate \
-		--release-notes /tmp/release-notes.md
+		--release-notes release-notes.md
 
 changelog:
 	@if ! command -v git-chglog &> /dev/null; then \

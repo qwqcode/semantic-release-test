@@ -46,10 +46,14 @@ jobs:
       - name: build and release publish
         run: make release
 
+  # 应该将新的 Changelog 包含在 tag 内，而不是打了 tag 再生成新 Changelog
   changelog-update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: master
       - uses: actions/setup-go@v3
         with:
           go-version: '1.19.4'
@@ -64,4 +68,4 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -m "chore: update changelog for ${{ steps.get_version.outputs.VERSION }}"
-          git push origin master
+          git push
