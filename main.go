@@ -9,9 +9,6 @@ const (
 
 func main() {
 	// make some changes
-	a := 1
-	b := 1
-	_ = fmt.Sprintln(a + b)
 
 	fmt.Println(Hello + " " + World)
 }
