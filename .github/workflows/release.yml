@@ -31,9 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Git Fetch
-        run: git fetch --prune --unshallow --tags -f
+        with:
+          fetch-depth: 0
+          ref: master
 
       - name: Setup Golang
         uses: actions/setup-go@v3
@@ -49,16 +49,19 @@ jobs:
       - name: Handle Version Number
         run: |
           if [ ! -z "${{ inputs.custom }}" ]; then
-            if [[ ! "${{ inputs.custom }}" =~ ^v.* ]]; then
-              echo "[err] custom tag name must be v*."
-              exit 1
-            fi
             next_version="${{ inputs.custom }}"
           else
             prev_version="$(git describe --tags --abbrev=0)"
-            next_version="v$(npx semver --increment '${{ inputs.semver }}' '${prev_version}')"
+            echo "prev_version: ${prev_version}"
+            npm install -g semver
+            next_version="v$(semver --increment ${{ inputs.semver }} ${prev_version})"
           fi
           
+          if [[ ! "${next_version}" =~ ^v.* ]]; then
+            echo "[err] custom tag name must be v*."
+            exit 1
+          fi
+
           echo "next_version: ${next_version}"
           echo "VERSION=${next_version}" >> $GITHUB_ENV
 
