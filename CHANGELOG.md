@@ -1,4 +1,7 @@
 
+## [v1.0.25](https://github.com/qwqcode/semantic-release-test/compare/v1.0.24...v1.0.25) (2023-01-24)
+
+
 ## [v1.0.24](https://github.com/qwqcode/semantic-release-test/compare/v1.0.23...v1.0.24) (2023-01-24)
 
 ### Features
