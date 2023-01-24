@@ -5,6 +5,11 @@ on:
     tags:
       - v*
 
+env:
+  IMAGE_CACHE_DIR: /tmp/cache/docker-image
+  IMAGE_CACHE_KEY: docker-cache-image
+  GO_VERSION: '1.19'
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -19,28 +24,28 @@ jobs:
       - name: Setup Golang
         uses: actions/setup-go@v3
         with:
-          go-version: '1.19'
+          go-version: ${{ env.GO_VERSION }}
 
       # docker cache
-      - run: mkdir -p .docker-cache
       - name: Docker Image Cache
-        id: cache-go-cross-v1_19_4
+        id: cache-docker-images-go-cross
         uses: actions/cache@v3
         with:
-          path: .docker-cache
-          key: cache-go-cross-v1_19_4
+          path: ${{ env.IMAGE_CACHE_DIR }}/go-cross
+          key: ${{ runner.os }}-docker-image-go-cross-v1_19_4
 
       # pull docker image
       - name: Pull Docker Image
-        if: steps.cache-go-cross-v1_19_4.outputs.cache-hit != 'true'
+        if: steps.cache-docker-images-go-cross.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/goreleaser/goreleaser-cross:v1.19.4
-          docker save -o .docker-cache/golang-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
+          mkdir -p ${{ env.IMAGE_CACHE_DIR }}/go-cross
+          docker save -o ${{ env.IMAGE_CACHE_DIR }}/go-cross/go-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
 
       # restore docker image from cache
       - name: Restore Docker Image from Cache
-        if: steps.cache-go-cross-v1_19_4.outputs.cache-hit == 'true'
-        run: docker load -i .docker-cache/golang-cross.tar
+        if: steps.cache-docker-images-go-cross.outputs.cache-hit == 'true'
+        run: docker load -i ${{ env.IMAGE_CACHE_DIR }}/go-cross/go-cross.tar
         
       # pre-build
       - name: Setup Release Environment
@@ -61,7 +66,7 @@ jobs:
   #         ref: master
   #     - uses: actions/setup-go@v3
   #       with:
-  #         go-version: '1.19'
+  #         go-version: ${{ env.GO_VERSION }}
   #     - name: Get the version
   #       id: get_version
   #       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
