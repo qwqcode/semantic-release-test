@@ -1,0 +1,31 @@
+name: npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      custom:
+        description: 'Custom tag name (i.e v1.0.0-rc)'
+        required: false
+        default: ''
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Git Fetch
+        run: git fetch --prune --unshallow --tags -f
+
+      # - name: Setup Node
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 16.x
+      #     registry-url: https://registry.npmjs.org/
+
+      - name: Modify JSON file
+        run: |
+          NEW_VERSION="2.2.0"
+          sed -i 's#"version": ".*?"#"version": "${NEW_VERSION}"#' ui/package.json
+          cat ui/package.json

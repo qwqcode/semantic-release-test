@@ -31,15 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: master
 
-      - name: Setup Golang
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          
+      - name: Git Fetch
+        run: git fetch --prune --unshallow --tags -f
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -51,9 +46,9 @@ jobs:
           if [ ! -z "${{ inputs.custom }}" ]; then
             next_version="${{ inputs.custom }}"
           else
+            npm install -g semver
             prev_version="$(git describe --tags --abbrev=0)"
             echo "prev_version: ${prev_version}"
-            npm install -g semver
             next_version="v$(semver --increment ${{ inputs.semver }} ${prev_version})"
           fi
           
@@ -64,6 +59,11 @@ jobs:
 
           echo "next_version: ${next_version}"
           echo "VERSION=${next_version}" >> $GITHUB_ENV
+
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
 
       - name: Changelog and Tagging
         run: |
