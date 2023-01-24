@@ -20,7 +20,7 @@ func main() {
 
 func foo() {
 
-	fmt.Println("233")
+	fmt.Println("1234")
 
 	fmt.Println(config.Version)
 	fmt.Println(config.CommitHash)
