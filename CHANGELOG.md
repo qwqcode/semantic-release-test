@@ -1,4 +1,17 @@
 
+## [v1.0.31](https://github.com/qwqcode/semantic-release-test/compare/v1.0.30...v1.0.31) (2023-01-24)
+
+### Bug Fixes
+
+* try fix bug, fuck
+* try fix bug
+* build job
+
+### Performance Improvements
+
+* improve
+
+
 ## [v1.0.30](https://github.com/qwqcode/semantic-release-test/compare/v1.0.29...v1.0.30) (2023-01-24)
 
 ### Bug Fixes
