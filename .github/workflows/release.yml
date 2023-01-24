@@ -32,7 +32,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.IMAGE_CACHE_DIR }}/go-cross
-          key: ${{ runner.os }}-docker-image-go-cross-v1_19_4
+          key: ${{ runner.os }}-docker-image-go-cross
 
       # pull docker image
       - name: Pull Docker Image
