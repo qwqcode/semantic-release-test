@@ -35,7 +35,9 @@ jobs:
 
       - name: Get Current Version number
         run: |
-          echo "PREV_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+          version="$(git describe --tags --abbrev=0)"
+          echo "${version}"
+          echo "PREV_VERSION=${version}" >> $GITHUB_ENV
           echo "${{ env.PREV_VERSION }}"
 
       - name: Set node version to 16.x
@@ -45,10 +47,11 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Get Next Version number
+        if: github.event.inputs.custom == ''
         run: |
           if [ -z "${{ github.event.inputs.custom }}" ]; then
             npm install -g semver
-            version=$(semver --increment '${{ github.event.inputs.semver }}' '${{ env.PREV_VERSION }}')
+            version="$(semver --increment '${{ github.event.inputs.semver }}' '${{ env.PREV_VERSION }}')"
           else
             version="${{ github.event.inputs.custom }}"
           fi
