@@ -1,4 +1,17 @@
 
+## [v1.0.21](https://github.com/qwqcode/semantic-release-test/compare/v1.0.20...v1.0.21) (2023-01-24)
+
+### Bug Fixes
+
+* ci
+* ci
+* get current version
+
+### Features
+
+* add tag and push
+
+
 ## [v1.0.20](https://github.com/qwqcode/semantic-release-test/compare/v1.0.19...v1.0.20) (2023-01-24)
 
 ### Features
