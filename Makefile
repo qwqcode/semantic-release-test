@@ -33,6 +33,6 @@ changelog:
 	@if ! command -v git-chglog &> /dev/null; then \
 		go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest; \
 	fi
-	git-chglog -o CHANGELOG.md
+	git-chglog --next-tag $(NEXT_VERSION) -o CHANGELOG.md
 
 .PHONY: install release changelog;
