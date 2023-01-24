@@ -53,25 +53,25 @@ jobs:
         run: make release
 
   # 应该将新的 Changelog 包含在 tag 内，而不是打了 tag 再生成新 Changelog
-  changelog-update:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: master
-      - uses: actions/setup-go@v3
-        with:
-          go-version: '1.19'
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-      - name: Generate changelog
-        run: make changelog
-      - name: Commit changelog
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add .
-          git commit -m "chore: update changelog for ${{ steps.get_version.outputs.VERSION }}"
-          git push
+  # changelog-update:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         ref: master
+  #     - uses: actions/setup-go@v3
+  #       with:
+  #         go-version: '1.19'
+  #     - name: Get the version
+  #       id: get_version
+  #       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+  #     - name: Generate changelog
+  #       run: make changelog
+  #     - name: Commit changelog
+  #       run: |
+  #         git config user.name github-actions[bot]
+  #         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+  #         git add .
+  #         git commit -m "chore: update changelog for ${{ steps.get_version.outputs.VERSION }}"
+  #         git push
