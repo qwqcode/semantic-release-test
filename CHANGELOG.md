@@ -1,4 +1,18 @@
 
+## [v1.0.32](https://github.com/qwqcode/semantic-release-test/compare/v1.0.31...v1.0.32) (2023-01-24)
+
+### Bug Fixes
+
+* npm.yml
+* npm.yml
+* npm.yml
+
+### Features
+
+* support modify package.json in release.yml
+* add npm.yml
+
+
 ## [v1.0.31](https://github.com/qwqcode/semantic-release-test/compare/v1.0.30...v1.0.31) (2023-01-24)
 
 ### Bug Fixes
