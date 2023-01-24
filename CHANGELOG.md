@@ -1,4 +1,53 @@
 
+## [v1.0.20](https://github.com/qwqcode/semantic-release-test/compare/v1.0.19...v1.0.20) (2023-01-24)
+
+### Features
+
+* make some changes to check cache
+
+
+## [v1.0.19](https://github.com/qwqcode/semantic-release-test/compare/v1.0.18...v1.0.19) (2023-01-24)
+
+### Bug Fixes
+
+* try to rename
+
+
+## [v1.0.18](https://github.com/qwqcode/semantic-release-test/compare/v1.0.17...v1.0.18) (2023-01-24)
+
+### Bug Fixes
+
+* env var
+
+
+## [v1.0.17](https://github.com/qwqcode/semantic-release-test/compare/v1.0.16...v1.0.17) (2023-01-24)
+
+### Features
+
+* try to fix again again
+
+
+## [v1.0.16](https://github.com/qwqcode/semantic-release-test/compare/v1.0.15...v1.0.16) (2023-01-24)
+
+### Features
+
+* make some changes for test github actions
+
+
+## [v1.0.15](https://github.com/qwqcode/semantic-release-test/compare/v1.0.14...v1.0.15) (2023-01-24)
+
+### Bug Fixes
+
+* try to fix docker cache again
+
+
+## [v1.0.14](https://github.com/qwqcode/semantic-release-test/compare/v1.0.13...v1.0.14) (2023-01-24)
+
+### Bug Fixes
+
+* try to fix docker cache
+
+
 ## [v1.0.13](https://github.com/qwqcode/semantic-release-test/compare/v1.0.12...v1.0.13) (2023-01-24)
 
 ### Bug Fixes
