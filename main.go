@@ -14,6 +14,8 @@ const (
 func main() {
 	// make some changes
 
+	fmt.Println("233")
+
 	fmt.Println(config.Version)
 	fmt.Println(config.CommitHash)
 
