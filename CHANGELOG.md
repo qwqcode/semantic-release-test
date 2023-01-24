@@ -1,4 +1,18 @@
 
+## [v1.0.27](https://github.com/qwqcode/semantic-release-test/compare/v1.0.26...v1.0.27) (2023-01-24)
+
+### Performance Improvements
+
+* **changelog:** use next-tag to gen changelog
+
+
+## [v1.0.26](https://github.com/qwqcode/semantic-release-test/compare/v1.0.25...v1.0.26) (2023-01-24)
+
+### Features
+
+* add release job in workflow
+
+
 ## [v1.0.25](https://github.com/qwqcode/semantic-release-test/compare/v1.0.24...v1.0.25) (2023-01-24)
 
 
