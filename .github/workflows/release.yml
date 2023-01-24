@@ -55,9 +55,8 @@ jobs:
             fi
             next_version="${{ inputs.custom }}"
           else
-            npm install -g semver
             prev_version="$(git describe --tags --abbrev=0)"
-            next_version="v$(semver --increment '${{ inputs.semver }}' '${prev_version}')"
+            next_version="v$(npx semver --increment '${{ inputs.semver }}' '${prev_version}')"
           fi
           
           echo "next_version: ${next_version}"
