@@ -1,4 +1,11 @@
 
+## [v1.0.13](https://github.com/qwqcode/semantic-release-test/compare/v1.0.12...v1.0.13) (2023-01-24)
+
+### Bug Fixes
+
+* update release.yml
+
+
 ## [v1.0.12](https://github.com/qwqcode/semantic-release-test/compare/v1.0.11...v1.0.12) (2023-01-24)
 
 ### Bug Fixes
