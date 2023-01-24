@@ -26,6 +26,6 @@ jobs:
 
       - name: Modify JSON file
         run: |
-          NEW_VERSION="2.2.0"
-          perl -i -pe 's/"version": ".*?"/"version": "'${NEW_VERSION}'"/g' ui/package.json
+          NEW_VERSION="v2.2.0"
+          perl -i -pe 's/"version": ".*?"/"version": "'${NEW_VERSION#v}'"/g' ui/package.json
           cat ui/package.json

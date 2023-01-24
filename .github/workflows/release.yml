@@ -67,17 +67,18 @@ jobs:
 
       - name: Changelog and Tagging
         run: |
-          if [ ! $(git tag -l "${{ env.VERSION }}") ]; then
+          version="${{ env.VERSION }}"
+          if [ ! $(git tag -l "${version}") ]; then
             make changelog
-            perl -i -pe 's/"version": ".*?"/"version": "'${{ env.VERSION }}'"/g' ui/package.json
+            perl -i -pe 's/"version": ".*?"/"version": "'${version#v}'"/g' ui/package.json
 
             git config user.name github-actions[bot]
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git add CHANGELOG.md ui/package.json
-            git commit -m "chore: release ${{ env.VERSION }}"
-            git tag '${{ env.VERSION }}'
+            git commit -m "chore: release ${version}"
+            git tag "${version}"
 
-            git push origin master '${{ env.VERSION }}'
+            git push origin master "${version}"
           else
             echo "skipped because git tag already exists."
           fi
