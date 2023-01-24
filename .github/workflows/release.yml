@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '1.19'
-          cache: true
 
       # docker cache
       - run: mkdir -p ~/docker-cache
@@ -31,7 +30,6 @@ jobs:
           path: ~/docker-cache
           key: cache-go-cross-v1_19_4
           restore-keys: cache-go-cross-v1_19_4
-          
 
       # pull docker image
       - name: Pull Docker Image
