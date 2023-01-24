@@ -7,9 +7,9 @@ on:
         type: choice
         description: Which version you want to increment?
         options:
-          - major
-          - minor
           - patch
+          - minor
+          - major
         required: true
       custom:
         description: 'Custom tag. i.e v1.0.0-rc'
@@ -46,16 +46,32 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - name: Get Next Version number
-        if: github.event.inputs.custom == ''
         run: |
           if [ -z "${{ github.event.inputs.custom }}" ]; then
             npm install -g semver
-            version="$(semver --increment '${{ github.event.inputs.semver }}' '${{ env.PREV_VERSION }}')"
+            version="v$(semver --increment '${{ github.event.inputs.semver }}' '${{ env.PREV_VERSION }}')"
           else
             version="${{ github.event.inputs.custom }}"
           fi
           echo "${version}"
           echo "NEXT_VERSION=${version}" >> $GITHUB_ENV
+
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Generate changelog
+        run: make changelog
+
+      - name: Tag and push
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add CHANGELOG.md
+          git commit -m "chore: update changelog for ${{ env.NEXT_VERSION }}"
+          git tag '${{ env.NEXT_VERSION }}'
+          git push origin master '${{ env.NEXT_VERSION }}'
 
   # release:
   #   runs-on: ubuntu-latest
