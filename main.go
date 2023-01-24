@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	Hello = "Hello 1"
+	Hello = "Hello"
 	World = "World"
 )
 
