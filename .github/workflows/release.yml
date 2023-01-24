@@ -10,14 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: git fetch  
+      - name: Git Fetch  
         run: git fetch --prune --unshallow --tags -f
 
-      # cache
-      - name: docker image cache
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.19.4'
+
+      - name: Get Golang env for Cache
+        id: go-cache-paths
+        run: |
+          echo "::set-output name=go-build::$(go env GOCACHE)"
+          echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+
+      # docker cache
+      - name: Docker Image Cache
         id: cache-go-cross-v1_19_4
         uses: actions/cache@v3
         with:
@@ -25,7 +36,7 @@ jobs:
           key: cache-go-cross-v1_19_4
 
       # pull docker image
-      - name: pull docker image
+      - name: Pull Docker Image
         if: steps.cache-go-cross-v1_19_4.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/goreleaser/goreleaser-cross:v1.19.4
@@ -33,17 +44,29 @@ jobs:
           docker save -o ~/docker-cache/golang-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
 
       # restore docker image from cache
-      - name: restore docker image from cache
+      - name: Restore Docker Image from Cache
         if: steps.cache-go-cross-v1_19_4.outputs.cache-hit == 'true'
         run: docker load -i ~/docker-cache/golang-cross.tar
 
+      - name: Go Build Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
+
+      - name: Go Mod Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+
       # pre-build
-      - name: setup release environment
+      - name: Setup Release Environment
         run: |-
           echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
 
       # build and release
-      - name: build and release publish
+      - name: Build and Release
         run: make release
 
   # 应该将新的 Changelog 包含在 tag 内，而不是打了 tag 再生成新 Changelog
