@@ -1,4 +1,11 @@
 
+## [v1.0.33](https://github.com/qwqcode/semantic-release-test/compare/v1.0.32...v1.0.33) (2023-01-24)
+
+### Bug Fixes
+
+* remove prefix v in package.json
+
+
 ## [v1.0.32](https://github.com/qwqcode/semantic-release-test/compare/v1.0.31...v1.0.32) (2023-01-24)
 
 ### Bug Fixes
