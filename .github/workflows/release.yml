@@ -1,4 +1,5 @@
 name: Release Build
+run-name: Release ${{ inputs.semver || inputs.custom }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
@@ -47,11 +48,11 @@ jobs:
 
       - name: Get Next Version number
         run: |
-          if [ -z "${{ github.event.inputs.custom }}" ]; then
+          if [ -z "${{ inputs.custom }}" ]; then
             npm install -g semver
-            version="v$(semver --increment '${{ github.event.inputs.semver }}' '${{ env.PREV_VERSION }}')"
+            version="v$(semver --increment '${{ inputs.semver }}' '${{ env.PREV_VERSION }}')"
           else
-            version="${{ github.event.inputs.custom }}"
+            version="${{ inputs.custom }}"
           fi
           echo "${version}"
           echo "NEXT_VERSION=${version}" >> $GITHUB_ENV
