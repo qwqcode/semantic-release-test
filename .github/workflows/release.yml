@@ -12,37 +12,36 @@ jobs:
     steps:
       - name: checkout code
         uses: actions/checkout@v3
-      - run: git fetch --prune --unshallow --tags -f
 
-      - name: setup go
-        uses: actions/setup-go@v3
-        with:
-          go-version: '^1.19.4'
+      - name: git fetch  
+        run: git fetch --prune --unshallow --tags -f
 
-      # docker `golang-cross` image cache
-      # `cache-go-cross-v1-19-4`
-      - run: mkdir -p ~/docker-cache
+      # cache
       - name: docker image cache
-        id: cache-go-cross-v1-19-4
-        uses: actions/cache@v2
+        id: cache-go-cross-v1_19_4
+        uses: actions/cache@v3
         with:
           path: ~/docker-cache
-          # Adjust key to meet your cache time requirements e.g.
-          # ${{ hashFiles(*) }} can be useful here to invalidate
-          # cache on file changes
-          key: cache-go-cross-v1-19-4
+          key: cache-go-cross-v1_19_4
 
-      - if: steps.cache-go-cross-v1-19-4.outputs.cache-hit != 'true'
+      # pull docker image
+      - name: pull docker image
+        if: steps.cache-go-cross-v1_19_4.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/goreleaser/goreleaser-cross:v1.19.4
           docker save -o ~/docker-cache/golang-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
-      - if: steps.cache-go-cross-v1-19-4.outputs.cache-hit == 'true'
+
+      # restore docker image from cache
+      - name: restore docker image from cache
+        if: steps.cache-go-cross-v1_19_4.outputs.cache-hit == 'true'
         run: docker load -i ~/docker-cache/golang-cross.tar
 
-      # build
+      # pre-build
       - name: setup release environment
         run: |-
           echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
+
+      # build and release
       - name: build and release publish
         run: make release
 
