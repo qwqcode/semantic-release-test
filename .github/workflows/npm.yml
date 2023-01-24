@@ -27,5 +27,5 @@ jobs:
       - name: Modify JSON file
         run: |
           NEW_VERSION="2.2.0"
-          sed -i 's#"version": ".*?"#"version": "${NEW_VERSION}"#' ui/package.json
+          perl -i -pe 's/"version": ".*?"/"version": "${NEW_VERSION}"/g' ui/package.json
           cat ui/package.json
