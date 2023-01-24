@@ -22,26 +22,25 @@ jobs:
           go-version: '1.19'
 
       # docker cache
-      - run: mkdir -p ~/docker-cache
+      - run: mkdir -p .docker-cache
       - name: Docker Image Cache
         id: cache-go-cross-v1_19_4
         uses: actions/cache@v3
         with:
-          path: ~/docker-cache
+          path: .docker-cache
           key: cache-go-cross-v1_19_4
-          restore-keys: cache-go-cross-v1_19_4
 
       # pull docker image
       - name: Pull Docker Image
         if: steps.cache-go-cross-v1_19_4.outputs.cache-hit != 'true'
         run: |
           docker pull ghcr.io/goreleaser/goreleaser-cross:v1.19.4
-          docker save -o ~/docker-cache/golang-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
+          docker save -o .docker-cache/golang-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
 
       # restore docker image from cache
       - name: Restore Docker Image from Cache
         if: steps.cache-go-cross-v1_19_4.outputs.cache-hit == 'true'
-        run: docker load -i ~/docker-cache/golang-cross.tar
+        run: docker load -i .docker-cache/golang-cross.tar
         
       # pre-build
       - name: Setup Release Environment
