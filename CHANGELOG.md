@@ -1,4 +1,11 @@
 
+## [v1.0.7](https://github.com/qwqcode/semantic-release-test/compare/v1.0.6...v1.0.7) (2023-01-24)
+
+### Features
+
+* extract to a foo function
+
+
 ## [v1.0.6](https://github.com/qwqcode/semantic-release-test/compare/v1.0.5...v1.0.6) (2023-01-24)
 
 ### Bug Fixes
