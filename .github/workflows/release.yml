@@ -1,5 +1,5 @@
 name: Release Build
-run-name: Release ${{ inputs.semver || inputs.custom }} by @${{ github.actor }}
+run-name: Release ${{ github.env.NEXT_VERSION || inputs.semver || inputs.custom }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
