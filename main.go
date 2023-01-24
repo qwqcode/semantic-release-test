@@ -13,11 +13,15 @@ const (
 
 func main() {
 	// make some changes
+	foo()
+
+	fmt.Println(Hello + " " + World)
+}
+
+func foo() {
 
 	fmt.Println("233")
 
 	fmt.Println(config.Version)
 	fmt.Println(config.CommitHash)
-
-	fmt.Println(Hello + " " + World)
 }
