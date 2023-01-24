@@ -1,5 +1,5 @@
 name: Release Build
-run-name: Release ${{ github.env.NEXT_VERSION || inputs.semver || inputs.custom }} by @${{ github.actor }}
+run-name: Release ${{ inputs.custom || inputs.semver }} by @${{ github.actor }}
 
 on:
   workflow_dispatch:
@@ -21,12 +21,13 @@ on:
   #     - v*
 
 env:
-  IMAGE_CACHE_DIR: /tmp/cache/docker-image
-  IMAGE_CACHE_KEY: docker-cache-image
   GO_VERSION: '1.19.4'
+  DOCKER_IMAGE: ghcr.io/goreleaser/goreleaser-cross
+  IMAGE_CACHE_DIR: /tmp/cache/docker-image
 
 jobs:
-  tag:
+  tagging:
+    name: Tagging new version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -74,71 +75,50 @@ jobs:
           git tag '${{ env.NEXT_VERSION }}'
           git push origin master '${{ env.NEXT_VERSION }}'
 
-  # release:
-  #   runs-on: ubuntu-latest
+  build_release:
+    name: Build and release
+    needs: tagging
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  #     - name: Git Fetch  
-  #       run: git fetch --prune --unshallow --tags -f
+      - name: Git Fetch
+        run: git fetch --prune --unshallow --tags -f
 
-  #     - name: Setup Golang
-  #       uses: actions/setup-go@v3
-  #       with:
-  #         go-version: ${{ env.GO_VERSION }}
+      - name: Setup Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
 
-  #     # docker cache
-  #     - name: Docker Image Cache
-  #       id: cache-docker-images-go-cross
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ${{ env.IMAGE_CACHE_DIR }}/go-cross
-  #         key: ${{ runner.os }}-docker-image-go-cross
+      # docker cache
+      - name: Docker Image Cache
+        id: docker-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.IMAGE_CACHE_DIR }}
+          key: docker-image-go-cross-${{ env.GO_VERSION }}
 
-  #     # pull docker image
-  #     - name: Pull Docker Image
-  #       if: steps.cache-docker-images-go-cross.outputs.cache-hit != 'true'
-  #       run: |
-  #         docker pull ghcr.io/goreleaser/goreleaser-cross:v1.19.4
-  #         mkdir -p ${{ env.IMAGE_CACHE_DIR }}/go-cross
-  #         docker save -o ${{ env.IMAGE_CACHE_DIR }}/go-cross/go-cross.tar ghcr.io/goreleaser/goreleaser-cross:v1.19.4
+      # pull docker image
+      - name: Pull Docker Image
+        if: steps.docker-cache.outputs.cache-hit != 'true'
+        run: |
+          docker pull ${{ env.DOCKER_IMAGE }}:v${{ env.GO_VERSION }}
+          mkdir -p ${{ env.IMAGE_CACHE_DIR }}
+          docker save -o ${{ env.IMAGE_CACHE_DIR }}/go-cross.tar ${{ env.DOCKER_IMAGE }}:v${{ env.GO_VERSION }}
 
-  #     # restore docker image from cache
-  #     - name: Restore Docker Image from Cache
-  #       if: steps.cache-docker-images-go-cross.outputs.cache-hit == 'true'
-  #       run: docker load -i ${{ env.IMAGE_CACHE_DIR }}/go-cross/go-cross.tar
+      # restore docker image from cache
+      - name: Restore Docker Image from Cache
+        if: steps.docker-cache.outputs.cache-hit == 'true'
+        run: docker load -i ${{ env.IMAGE_CACHE_DIR }}/go-cross.tar
         
-  #     # pre-build
-  #     - name: Setup Release Environment
-  #       run: |-
-  #         echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
+      # pre-build
+      - name: Setup Release Environment
+        run: |-
+          echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
 
-  #     # build and release
-  #     - name: Build and Release
-  #       run: make release
+      # build and release
+      - name: Build and Release
+        run: make release
 
-  # 应该将新的 Changelog 包含在 tag 内，而不是打了 tag 再生成新 Changelog
-  # changelog-update:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #         ref: master
-  #     - uses: actions/setup-go@v3
-  #       with:
-  #         go-version: ${{ env.GO_VERSION }}
-  #     - name: Get the version
-  #       id: get_version
-  #       run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-  #     - name: Generate changelog
-  #       run: make changelog
-  #     - name: Commit changelog
-  #       run: |
-  #         git config user.name github-actions[bot]
-  #         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-  #         git add .
-  #         git commit -m "chore: update changelog for ${{ steps.get_version.outputs.VERSION }}"
-  #         git push
