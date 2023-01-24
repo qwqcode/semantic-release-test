@@ -12,7 +12,7 @@ on:
           - patch
         required: true
       custom:
-        description: 'Custom tag. i.e v1.0.0-final, v1.0.0-alpha, v1.0.0-rc'
+        description: 'Custom tag. i.e v1.0.0-rc'
         required: false
         default: ''
   # push:
@@ -30,9 +30,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Git Fetch  
+        run: git fetch --prune --unshallow --tags -f
+
       - name: Get Current Version number
         run: |
-          echo "PREV_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+          echo "PREV_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
           echo "${{ env.PREV_VERSION }}"
 
       - name: Set node version to 16.x
