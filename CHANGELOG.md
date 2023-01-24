@@ -1,4 +1,15 @@
 
+## [v1.0.5](https://github.com/qwqcode/semantic-release-test/compare/v1.0.4...v1.0.5) (2023-01-24)
+
+### Bug Fixes
+
+* rename release workflow user.name
+
+### Features
+
+* add some new features
+
+
 ## [v1.0.4](https://github.com/qwqcode/semantic-release-test/compare/v1.0.3...v1.0.4) (2023-01-24)
 
 ### Bug Fixes
