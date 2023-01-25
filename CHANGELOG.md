@@ -1,5 +1,19 @@
 
-## [v1.1.0](https://github.com/qwqcode/semantic-release-test/compare/v1.0.34...v1.1.0) (0001-01-01)
+## [v1.1.1](https://github.com/qwqcode/semantic-release-test/compare/v1.1.0...v1.1.1) (2023-01-25)
+
+### Bug Fixes
+
+* release.yml
+* release.yml
+* yml archor
+
+### Features
+
+* update
+* add git-chglog bin
+
+
+## [v1.1.0](https://github.com/qwqcode/semantic-release-test/compare/v1.0.34...v1.1.0) (2023-01-25)
 
 
 ## [v1.0.34](https://github.com/qwqcode/semantic-release-test/compare/v1.0.33...v1.0.34) (2023-01-24)
