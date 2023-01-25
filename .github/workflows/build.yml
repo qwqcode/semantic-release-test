@@ -1,5 +1,5 @@
-name: APP Build
-run-name: Build Go APP and Publish
+name: App Build
+run-name: Build Go App and Publish
 
 on:
   repository_dispatch:
