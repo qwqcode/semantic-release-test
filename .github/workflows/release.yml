@@ -121,7 +121,8 @@ jobs:
         run: docker load -i ${{ env.IMAGE_CACHE_DIR }}/go-cross.tar
 
       # setup git-chglog
-      - *setup-git-chglog
+      -
+        <<: *setup-git-chglog
 
       # pre-build
       - name: Pre-Build
