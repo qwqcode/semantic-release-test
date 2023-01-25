@@ -67,7 +67,7 @@ jobs:
           if [ ! $(git tag -l "${VERSION}") ]; then
             # prepend changelog
             changelog=$(git-chglog --next-tag "${VERSION}" "${VERSION}")
-            echo -e "${changelog}" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+            (echo -e "${changelog}\n" | sed "s/^[ \t]*//") | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
 
             # modify the version of `package.json`
             perl -i -pe 's/"version": ".*?"/"version": "'${VERSION#v}'"/g' "${UI_NPM_PKG_FILE}"
