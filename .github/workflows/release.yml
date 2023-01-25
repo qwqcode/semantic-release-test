@@ -63,8 +63,7 @@ jobs:
           echo "next_version: $next_version"
           echo "VERSION=$next_version" >> $GITHUB_ENV
 
-      - &setup-git-chglog
-        name: Setup git-chglog
+      - name: Setup git-chglog
         run: |
             curl -sL $(curl -s https://api.github.com/repos/git-chglog/git-chglog/releases/latest \
               | grep -oP '"https://.+linux_amd64.tar.gz"' | tr -d \") | tar -C /usr/local/bin -xz git-chglog
@@ -122,7 +121,10 @@ jobs:
 
       # setup git-chglog
       - name: Setup git-chglog
-        <<: *setup-git-chglog
+        run: |
+            curl -sL $(curl -s https://api.github.com/repos/git-chglog/git-chglog/releases/latest \
+              | grep -oP '"https://.+linux_amd64.tar.gz"' | tr -d \") | tar -C /usr/local/bin -xz git-chglog
+            git-chglog --version
 
       # pre-build
       - name: Pre-Build
