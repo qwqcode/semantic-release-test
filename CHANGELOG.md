@@ -1,5 +1,4 @@
-
-## [v1.1.4-rc.1](https://github.com/qwqcode/semantic-release-test/compare/v1.1.3...v1.1.4-rc.1) (0001-01-01)
+## [v1.1.4-rc.1](https://github.com/qwqcode/semantic-release-test/compare/v1.1.3...v1.1.4-rc.1) (2023-01-25)
 
 
 ## [v1.1.3](https://github.com/qwqcode/semantic-release-test/compare/v1.1.2...v1.1.3) (2023-01-25)

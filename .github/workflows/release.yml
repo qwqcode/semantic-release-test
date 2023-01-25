@@ -65,9 +65,14 @@ jobs:
       - name: Version Changelog and Tagging
         run: |
           if [ ! $(git tag -l "${VERSION}") ]; then
-            git-chglog --next-tag ${VERSION} -o CHANGELOG.md
+            # prepend changelog
+            changelog=$(git-chglog --next-tag "${VERSION}" "${VERSION}")
+            echo -e "${changelog}" | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+
+            # modify the version of `package.json`
             perl -i -pe 's/"version": ".*?"/"version": "'${VERSION#v}'"/g' "${UI_NPM_PKG_FILE}"
 
+            # git commit and push
             git config user.name github-actions[bot]
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git add CHANGELOG.md "${UI_NPM_PKG_FILE}"

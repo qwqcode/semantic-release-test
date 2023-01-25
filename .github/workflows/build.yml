@@ -60,7 +60,7 @@ jobs:
           git-chglog ${VERSION} > local/release-notes.md
           
           # github token
-          echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > local/.release-env
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" > local/.release-env
 
       - name: Build and Release
         run: |
