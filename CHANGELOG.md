@@ -1,4 +1,11 @@
 
+## [v1.1.8](https://github.com/qwqcode/semantic-release-test/compare/v1.1.7...v1.1.8) (2023-01-25)
+
+### Features
+
+* update release flags
+
+
 ## [v1.1.7](https://github.com/qwqcode/semantic-release-test/compare/v1.1.6...v1.1.7) (2023-01-25)
 
 ### Bug Fixes
