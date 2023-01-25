@@ -1,0 +1,20 @@
+name: git-chglog
+
+on:
+  workflow_dispatch:
+    inputs:
+      custom:
+        description: 'Test'
+        required: false
+        default: ''
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup git-chglog
+        run: |
+            curl -sL $(curl -s https://api.github.com/repos/git-chglog/git-chglog/releases/latest \
+              | grep -oP '"https://.+linux_amd64.tar.gz"' | tr -d \") | tar -C /usr/local/bin -xz git-chglog
+            git-chglog -h
