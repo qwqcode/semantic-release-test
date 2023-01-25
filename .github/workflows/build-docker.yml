@@ -20,16 +20,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            function getSha() {
-              if (context.eventName && context.eventName == "pull_request") {
-                return context.payload.pull_request.head.sha;
-              } else {
-                return context.sha;
-              }
-            }
-            github.repos.createCommitComment({
+            github.rest.repos.createCommitComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              commit_sha: getSha(),
+              commit_sha: context.sha,
               body: process.env.STDOUT
             })
