@@ -1,4 +1,11 @@
 
+## [v1.1.11](https://github.com/qwqcode/semantic-release-test/compare/v1.1.10...v1.1.11) (2023-01-25)
+
+### Features
+
+* update docker workflow
+
+
 ## [v1.1.10](https://github.com/qwqcode/semantic-release-test/compare/v1.1.9...v1.1.10) (2023-01-25)
 
 ### Bug Fixes
