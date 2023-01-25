@@ -1,4 +1,4 @@
-name: Build
+name: APP Build
 run-name: Build Go APP and Publish
 
 on:

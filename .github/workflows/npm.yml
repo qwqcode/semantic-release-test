@@ -1,4 +1,5 @@
-name: npm
+name: Frontend Build
+run-name: Build Frontend and Publish
 
 on:
   workflow_dispatch:
