@@ -1,4 +1,11 @@
 
+## [v1.1.5](https://github.com/qwqcode/semantic-release-test/compare/v1.1.4...v1.1.5) (2023-01-25)
+
+### Bug Fixes
+
+* trim begin of changelog prepend
+
+
 ## [v1.1.4](https://github.com/qwqcode/semantic-release-test/compare/v1.1.4-rc.1...v1.1.4) (2023-01-25)
 
 ### Bug Fixes
