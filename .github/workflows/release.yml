@@ -1,4 +1,4 @@
-name: Release
+name: Release New Version
 run-name: Release ${{ inputs.custom || inputs.semver }} by @${{ github.actor }}
 
 on:
@@ -22,11 +22,11 @@ env:
   UI_NPM_PKG_FILE: 'ui/package.json'
 
 jobs:
-  tagging:
-    name: Tagging new version
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
       - name: Git Fetch
         run: git fetch --prune --unshallow --tags -f
@@ -62,7 +62,7 @@ jobs:
               | grep -oP '"https://.+linux_amd64.tar.gz"' | tr -d \") | tar -C /usr/local/bin -xz git-chglog
             git-chglog --version
 
-      - name: Changelog and Tagging
+      - name: Version Changelog and Tagging
         run: |
           if [ ! $(git tag -l "${VERSION}") ]; then
             git-chglog --next-tag ${VERSION} -o CHANGELOG.md

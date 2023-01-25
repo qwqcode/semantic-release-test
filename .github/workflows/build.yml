@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build
 
 on:
   repository_dispatch:
@@ -9,13 +9,12 @@ on:
 
 env:
   GO_VERSION: '1.19.4'
-  PACKAGE_NAME: 'github.com/qwqcode/test'
-  DOCKER_IMAGE: ghcr.io/goreleaser/goreleaser-cross
-  IMAGE_CACHE_DIR: /tmp/cache/docker-image
+  PKG_NAME: 'github.com/qwqcode/test'
+  DOCKER_IMG: ghcr.io/goreleaser/goreleaser-cross
+  CACHE_DIR: /tmp/cache/docker-image
 
 jobs:
-  build_release:
-    name: Build and release
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,35 +24,30 @@ jobs:
           fetch-depth: 0
           ref: master
 
-      # docker cache
       - name: Docker Image Cache
         id: docker-cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.IMAGE_CACHE_DIR }}
+          path: ${{ env.CACHE_DIR }}
           key: docker-image-go-cross-${{ env.GO_VERSION }}
 
-      # pull docker image
       - name: Pull Docker Image
         if: steps.docker-cache.outputs.cache-hit != 'true'
         run: |
-          docker pull "${DOCKER_IMAGE}:v${GO_VERSION}"
-          mkdir -p "${IMAGE_CACHE_DIR}"
-          docker save -o "${IMAGE_CACHE_DIR}/go-cross.tar" "${DOCKER_IMAGE}:v${GO_VERSION}"
+          docker pull "${DOCKER_IMG}:v${GO_VERSION}"
+          mkdir -p "${CACHE_DIR}"
+          docker save -o "${CACHE_DIR}/go-cross.tar" "${DOCKER_IMG}:v${GO_VERSION}"
 
-      # restore docker image from cache
       - name: Restore Docker Image from Cache
         if: steps.docker-cache.outputs.cache-hit == 'true'
-        run: docker load -i ${IMAGE_CACHE_DIR}/go-cross.tar
+        run: docker load -i ${CACHE_DIR}/go-cross.tar
 
-      # setup git-chglog
       - name: Setup git-chglog
         run: |
             curl -sL $(curl -s https://api.github.com/repos/git-chglog/git-chglog/releases/latest \
               | grep -oP '"https://.+linux_amd64.tar.gz"' | tr -d \") | tar -C /usr/local/bin -xz git-chglog
             git-chglog --version
 
-      # pre build
       - name: Pre Build
         run: |-
           # get latest version by tag
@@ -67,7 +61,6 @@ jobs:
           # github token
           echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > local/.release-env
 
-      # build and release
       - name: Build and Release
         run: |
           docker run \
@@ -75,8 +68,8 @@ jobs:
             --privileged \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v $(pwd)/sysroot:/sysroot \
-            -v $(pwd):/go/src/${PACKAGE_NAME} \
-            -w /go/src/${PACKAGE_NAME} \
+            -v $(pwd):/go/src/${PKG_NAME} \
+            -w /go/src/${PKG_NAME} \
             -e CGO_ENABLED=1 \
             --env-file local/.release-env \
             ghcr.io/goreleaser/goreleaser-cross:v${GO_VERSION} \
