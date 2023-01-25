@@ -1,0 +1,35 @@
+name: Build Docker
+run-name: Build Docker Image and Publish
+
+on:
+  push:
+    # branches:
+    #   - 'master'
+    tags:
+      - 'v*'
+
+jobs:
+  build_publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Comment build info in commit
+        uses: actions/github-script@v6
+        env:
+          STDOUT: "Published new image: `ArtalkJS/Artalk`"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            function getSha() {
+              if (context.eventName && context.eventName == "pull_request") {
+                return context.payload.pull_request.head.sha;
+              } else {
+                return context.sha;
+              }
+            }
+            github.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: getSha(),
+              body: process.env.STDOUT
+            })
