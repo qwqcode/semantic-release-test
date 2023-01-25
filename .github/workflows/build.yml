@@ -74,5 +74,4 @@ jobs:
             -e CGO_ENABLED=1 \
             --env-file local/.release-env \
             ghcr.io/goreleaser/goreleaser-cross:v${GO_VERSION} \
-            release --rm-dist --skip-validate \
-            --release-notes local/release-notes.md
+            release --release-notes local/release-notes.md
