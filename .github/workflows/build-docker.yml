@@ -2,17 +2,44 @@ name: Build Docker
 run-name: Build Docker Image and Publish
 
 on:
-  push:
-    # branches:
-    #   - 'master'
-    tags:
-      - 'v*'
+  repository_dispatch:
+    types: [release]
 
 jobs:
   build_publish:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: master
+
+      - name: Checkout latest release tag
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          git checkout ${LATEST_TAG}
+
+      # https://github.com/docker/metadata-action
+      - name: Gen docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_IMG_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Print Docker meta
+        run: |
+          echo -e "${{ steps.meta.outputs.tags }}"
+          echo -e "${{ steps.meta.outputs.labels }}"
+
       - name: Comment build info in commit
         uses: actions/github-script@v6
         env:
