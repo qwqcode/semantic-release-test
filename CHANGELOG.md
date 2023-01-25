@@ -1,4 +1,11 @@
 
+## [v1.1.3](https://github.com/qwqcode/semantic-release-test/compare/v1.1.2...v1.1.3) (2023-01-25)
+
+### Performance Improvements
+
+* org the yml file
+
+
 ## [v1.1.2](https://github.com/qwqcode/semantic-release-test/compare/v1.1.1...v1.1.2) (2023-01-25)
 
 ### Bug Fixes
