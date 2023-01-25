@@ -21,10 +21,12 @@ on:
   #     - v*
 
 env:
+  PACKAGE_NAME: 'github.com/qwqcode/test'
   GO_VERSION: '1.19.4'
   DOCKER_IMAGE: ghcr.io/goreleaser/goreleaser-cross
   IMAGE_CACHE_DIR: /tmp/cache/docker-image
   UI_NPM_PKG_FILE: 'ui/package.json'
+  GIT_CHGLOG_VERSION: 'v0.15.2'
 
 jobs:
   tagging:
@@ -61,15 +63,17 @@ jobs:
           echo "next_version: $next_version"
           echo "VERSION=$next_version" >> $GITHUB_ENV
 
-      - name: Setup Golang
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
+      - &setup-git-chglog
+        name: Setup git-chglog
+        run: |
+            curl -sL $(curl -s https://api.github.com/repos/git-chglog/git-chglog/releases/latest \
+              | grep -oP '"https://.+linux_amd64.tar.gz"' | tr -d \") | tar -C /usr/local/bin -xz git-chglog
+            git-chglog --version
 
       - name: Changelog and Tagging
         run: |
           if [ ! $(git tag -l "$VERSION") ]; then
-            make changelog
+            git-chglog --next-tag $VERSION -o CHANGELOG.md
             perl -i -pe 's/"version": ".*?"/"version": "'${VERSION#v}'"/g' "$UI_NPM_PKG_FILE"
 
             git config user.name github-actions[bot]
@@ -95,11 +99,6 @@ jobs:
           fetch-depth: 0
           ref: master
 
-      - name: Setup Golang
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
       # docker cache
       - name: Docker Image Cache
         id: docker-cache
@@ -120,13 +119,29 @@ jobs:
       - name: Restore Docker Image from Cache
         if: steps.docker-cache.outputs.cache-hit == 'true'
         run: docker load -i ${{ env.IMAGE_CACHE_DIR }}/go-cross.tar
-        
+
+      # setup git-chglog
+      - *setup-git-chglog
+
       # pre-build
-      - name: Setup Release Environment
+      - name: Pre-Build
         run: |-
-          echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
+          mkdir -p local
+          git-chglog ${VERSION} > local/release-notes.md
+          echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > local/.release-env
 
       # build and release
       - name: Build and Release
-        run: make release
-
+        run: |
+          docker run \
+            --rm \
+            --privileged \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd)/sysroot:/sysroot \
+            -v $(pwd):/go/src/$PACKAGE_NAME \
+            -w /go/src/$PACKAGE_NAME \
+            -e CGO_ENABLED=1 \
+            --env-file local/.release-env \
+            ghcr.io/goreleaser/goreleaser-cross:v$GO_VERSION \
+            release --rm-dist --skip-validate \
+            --release-notes local/release-notes.md

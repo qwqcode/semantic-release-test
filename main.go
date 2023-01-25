@@ -8,7 +8,7 @@ import (
 
 const (
 	Hello = "Hello"
-	World = "World"
+	World = "World 1"
 )
 
 func main() {
