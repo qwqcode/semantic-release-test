@@ -91,7 +91,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           platforms: 'linux/amd64,linux/arm64'
-          push: ${{ github.event_name != 'pull_request' }}
+          push: false
           # tags: ${{ steps.meta.outputs.tags }}
           tags: ${{ env.DOCKER_TAGS }}
           labels: ${{ steps.meta.outputs.labels }}
