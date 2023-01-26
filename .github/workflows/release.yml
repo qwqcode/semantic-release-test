@@ -12,10 +12,10 @@ on:
           - minor
           - major
         required: true
-      custom:
-        description: 'Custom tag name (i.e v1.0.0-rc)'
-        required: false
-        default: ''
+      # custom:
+      #   description: 'Custom tag name (i.e v1.0.0-rc)'
+      #   required: false
+      #   default: ''
 
 env:
   REPO_DISPATCH_EVENT_TYPE: 'release'

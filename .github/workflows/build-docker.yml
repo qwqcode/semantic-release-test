@@ -101,7 +101,7 @@ jobs:
       - name: Comment build info in commit
         uses: actions/github-script@v6
         env:
-          STDOUT: "🐳 Published new image: [${{ env.IMG_NAME }}](https://hub.docker.com/r/${{ env.IMG_NAME }}) (${{ env.VERSION }} / sha-${{ env.COMMIT_HASH }})"
+          STDOUT: "🐳 Published new docker image: [${{ env.IMG_NAME }}](https://hub.docker.com/r/${{ env.IMG_NAME }}) (${{ env.VERSION }} / sha-${{ env.COMMIT_HASH }})"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
