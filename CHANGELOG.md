@@ -1,4 +1,11 @@
 
+## [v1.1.13](https://github.com/qwqcode/semantic-release-test/compare/v1.1.12...v1.1.13) (2023-01-26)
+
+### Features
+
+* add docker test
+
+
 ## [v1.1.12](https://github.com/qwqcode/semantic-release-test/compare/v1.1.11...v1.1.12) (2023-01-26)
 
 ### Features
