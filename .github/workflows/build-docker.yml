@@ -58,6 +58,41 @@ jobs:
           echo "${{ env.DOCKER_TAGS }}"
           echo "${{ env.COMMIT_HASH_FULL }}"
 
+      - name: Setup QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: 'amd64,arm64'
+
+      # https://github.com/docker/setup-buildx-action
+      - name: Setup Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build and Push
+        id: docker_build
+        uses: docker/build-push-action@v3
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: ./
+          file: ./Dockerfile
+          platforms: 'linux/amd64,linux/arm64'
+          push: false
+          # tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.DOCKER_TAGS }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # cache
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
       - name: Comment build info in commit
         uses: actions/github-script@v6
         env:
